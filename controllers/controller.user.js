@@ -1,7 +1,8 @@
-// const httpStatus = require("http-status");
+const httpStatus = require("http-status");
+const { User } = require("../services");
 const catchAsync = require("../utils/catchAsync");
 const pick = require("../utils/pick");
-const { User } = require("../services");
+const ApiError = require("../utils/ApiError");
 const roles = ["atasan", "pegawai"];
 
 const createUser = catchAsync(async (req, res) => {
@@ -17,7 +18,21 @@ const getUsers = catchAsync(async (req, res) => {
 	res.send({ ...users, results, totalResults: results.length });
 });
 
+const getUserById = catchAsync(async (req, res) => {
+	const user = await User.getUserById(req.params.userId);
+	if (!user) throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+	res.json({ user });
+});
+
+const getUserByEmail = catchAsync(async (req, res) => {
+	const user = await User.getUserByEmail(req.params.userEmail);
+	if (!user) throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+	res.json({ user });
+});
+
 module.exports = {
 	createUser,
 	getUsers,
+	getUserById,
+	getUserByEmail,
 };
