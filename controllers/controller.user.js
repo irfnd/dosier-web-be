@@ -18,21 +18,26 @@ const getUsers = catchAsync(async (req, res) => {
 	res.send({ ...users, results, totalResults: results.length });
 });
 
-const getUserById = catchAsync(async (req, res) => {
+const getUser = catchAsync(async (req, res) => {
 	const user = await User.getUserById(req.params.userId);
 	if (!user) throw new ApiError(httpStatus.NOT_FOUND, "User not found");
 	res.json({ user });
 });
 
-const getUserByEmail = catchAsync(async (req, res) => {
-	const user = await User.getUserByEmail(req.params.userEmail);
-	if (!user) throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+const updateUser = catchAsync(async (req, res) => {
+	const user = await User.updateUserById(req.params.userId, req.body);
 	res.json({ user });
+});
+
+const deleteUser = catchAsync(async (req, res) => {
+	await User.deleteUserById(req.params.userId);
+	res.status(httpStatus.NO_CONTENT).json();
 });
 
 module.exports = {
 	createUser,
 	getUsers,
-	getUserById,
-	getUserByEmail,
+	getUser,
+	updateUser,
+	deleteUser,
 };
