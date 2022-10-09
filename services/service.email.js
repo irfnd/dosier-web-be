@@ -1,11 +1,16 @@
 const nodemailer = require("nodemailer");
 const config = require("../configs/config");
+const logger = require("../configs/logger");
 
 const transport = nodemailer.createTransport(config.email.smtp);
 
-const connect = async () => {
-	return transport.verify().catch((err) => new Error(err, { cause: { service: "SMTP" } }));
-};
+const connect = () =>
+	transport
+		.verify()
+		.then(() => logger.info("[SMTP]\t-> Connected to SMTP"))
+		.catch((err) => {
+			throw new Error(err, { cause: { service: "SMTP" } });
+		});
 
 const sendEmail = async (to, subject, text) => {
 	const msg = { from: config.email.from, to, subject, text };

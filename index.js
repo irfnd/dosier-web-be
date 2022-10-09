@@ -9,14 +9,10 @@ let server;
 (async () => {
 	try {
 		await Promise.all([DB.connect(), SMTP.connect()]);
-		console.log();
-		logger.info("[MongoDB]\t-> Connected to database");
-		logger.info("[SMTP]\t-> Connected to SMTP");
-		logger.info(`[Express]\t-> Listening to port ${config.port}`);
-		console.log();
-		server = app.listen(config.port);
+		server = app.listen(config.port, () => logger.info(`[Express]\t-> Listening to port ${config.port}`));
 	} catch (err) {
 		logger.warn(`[${err.cause.service}] -> Unable to connect to ${err.cause.service}`);
+		logger.error(err.message);
 	}
 })();
 

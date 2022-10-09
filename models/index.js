@@ -1,11 +1,14 @@
 const mongoose = require("mongoose");
 const config = require("../configs/config");
+const logger = require("../configs/logger");
 
-const connect = async () => {
-	return mongoose
+const connect = () =>
+	mongoose
 		.connect(config.db.uri, config.db.options)
-		.catch((err) => new Error(err, { cause: { service: "MongoDB" } }));
-};
+		.then(() => logger.info("[MongoDB]\t-> Connected to MongoDB"))
+		.catch((err) => {
+			throw new Error(err, { cause: { service: "MongoDB" } });
+		});
 
 module.exports = {
 	DB: { connect },
