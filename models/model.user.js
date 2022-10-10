@@ -11,10 +11,7 @@ const userSchema = mongoose.Schema({
 	password: { type: String, minlength: 8, trim: true, private: true, required: true },
 	role: { type: String, enum: roles, default: "pegawai" },
 	verified: { type: Boolean, default: false },
-	photo: {
-		url: { type: String, default: "-" },
-		fileName: { type: String, default: "-" },
-	},
+	photo: { url: { type: String, default: null }, path: { type: String, default: null } },
 });
 
 userSchema.plugin(toJSON);
