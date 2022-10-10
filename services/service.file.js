@@ -15,7 +15,12 @@ const deleteFile = async (path) => {
 	return bucket.file(path).delete();
 };
 
+const deleteFolder = async (userId) => {
+	return bucket.deleteFiles({ prefix: `${userId}/` });
+};
+
 module.exports = {
 	uploadFile,
 	deleteFile,
+	deleteFolder,
 };
