@@ -7,7 +7,7 @@ const upload = ({ fieldName, fileTypes, limit }) => {
 
 	return multer({
 		storage: multer.memoryStorage(),
-		limits: parseSize(limit),
+		limits: { fileSize: parseSize(limit) },
 		fileFilter: (req, file, cb) => {
 			if (mimetypes.includes(file.mimetype)) {
 				cb(null, true);

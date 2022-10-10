@@ -2,12 +2,7 @@ const router = require("express").Router();
 const { Validate, Auth: Authorization, Multipart } = require("../middlewares");
 const { User: validateUser } = require("../validations");
 const { User } = require("../controllers");
-
-const photoProps = {
-	fieldName: "photo",
-	fileTypes: { "image/jpg": ".jpg", "image/jpeg": ".jpeg", "image/png": ".png" },
-	limit: "2MB",
-};
+const { photoProps } = require("../configs/fileProps");
 
 router
 	.route("/")
