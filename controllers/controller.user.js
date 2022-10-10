@@ -29,7 +29,7 @@ const updateUser = catchAsync(async (req, res) => {
 	const data = { ...req.body };
 	const user = await User.getUserById(userId);
 	if (req.file) {
-		if (user.photo.url !== "-" && user.photo.path !== "-") File.deleteFile(user.photo.path);
+		if (user.photo.url && user.photo.path) File.deleteFile(user.photo.path);
 		data.photo = File.uploadFile(req.file, { userId, folder: "photo" });
 	}
 	const results = await User.updateUserById(userId, data);
