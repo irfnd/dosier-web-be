@@ -4,6 +4,7 @@ const { objectId, password } = require("./validation.custom");
 
 const createUser = {
 	body: joi.object().keys({
+		nip: joi.number().required(),
 		name: joi.string().required(),
 		email: joi.string().required(),
 		phone: joi.string().phoneNumber({ defaultCountry: "ID", format: "e164" }).required(),
@@ -35,6 +36,7 @@ const updateUser = {
 			phone: joi.string().phoneNumber({ defaultCountry: "ID", format: "e164" }),
 			password: joi.string().custom(password),
 			role: joi.string().valid("pegawai", "atasan"),
+			photo: joi.object().keys({ url: joi.string(), fileName: joi.string() }),
 		})
 		.min(1),
 };

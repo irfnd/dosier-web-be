@@ -1,5 +1,5 @@
 const httpStatus = require("http-status");
-const { User } = require("../services");
+const { User, File } = require("../services");
 const catchAsync = require("../utils/catchAsync");
 const pick = require("../utils/pick");
 const ApiError = require("../utils/ApiError");
@@ -25,12 +25,22 @@ const getUser = catchAsync(async (req, res) => {
 });
 
 const updateUser = catchAsync(async (req, res) => {
-	const user = await User.updateUserById(req.params.userId, req.body);
-	res.json({ user });
+	const { userId } = req.params;
+	const data = { ...req.body };
+	const user = await User.getUserById(userId);
+	if (!user) throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+	if (req.file) {
+		if (user.photo.url && user.photo.path) File.deleteFile(user.photo.path);
+		data.photo = File.uploadFile(req.file, { userId, folder: "photo" });
+	}
+	const results = await User.updateUserById(userId, data);
+	res.json({ user: results });
 });
 
 const deleteUser = catchAsync(async (req, res) => {
-	await User.deleteUserById(req.params.userId);
+	const { userId } = req.params;
+	await User.deleteUserById(userId);
+	File.deleteFolder(userId);
 	res.status(httpStatus.NO_CONTENT).json();
 });
 
